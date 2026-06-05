@@ -3,7 +3,8 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-android {
+// Menggunakan ApplicationExtension sesuai perintah eror robot
+configure<com.android.build.api.dsl.ApplicationExtension> {
     namespace = "com.heruwngchn.addhmescrn"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -13,12 +14,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    // Menggunakan compilerOptions baru untuk menggantikan kotlinOptions yang usang
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 
     defaultConfig {
-        // ID Aplikasi utama disamakan dengan kuncian widget
         applicationId = "com.heruwngchn.addhmescrn"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
@@ -27,7 +28,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
