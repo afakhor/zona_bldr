@@ -1,0 +1,57 @@
+name: Flutter Auto Build APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Tarik Kode dari Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java Jdk
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter Environment
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: 'stable'
+
+      - name: Ambil Dependensi Project
+        run: flutter pub get
+
+      - name: Jalankan Perangkat Pembuat Gambar/Splash
+        run: |
+          flutter pub run flutter_launcher_icons || true
+          flutter pub run flutter_native_splash:create || true
+
+      - name: Compile Menjadi APK Debug
+        run: |
+          flutter clean
+          
+          # JURUS SAPU BERSIH: Paksa Flutter buat ulang file yang error!
+          flutter create . --platforms=android
+          
+          flutter pub get
+          
+          cd android
+          echo "sdk.dir=/usr/local/lib/android/sdk" > local.properties
+          echo "flutter.sdk=$FLUTTER_ROOT" >> local.properties
+          cd ..
+          
+          rm -rf android/.gradle
+          flutter build apk --debug --android-skip-build-dependency-validation
+
+      - name: Upload File APK Hasil Jadi
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zona-Beladiri
+          path: build/app/outputs/flutter-apk/app-debug.apk
