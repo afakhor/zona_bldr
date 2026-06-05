@@ -1,27 +1,33 @@
 package com.heruwngchn.addhmescrn
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.RemoteViews
-import es.antonborri.home_widget.HomeWidgetProvider
+import com.heruwngchn.addhmescrn.R
 
-class HomeScreenWidgetProvider : HomeWidgetProvider() {
+class HomeScreenWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
-        widgetData: SharedPreferences
+        appWidgetIds: IntArray
     ) {
+        // Mengambil data dari SharedPreferences lokal yang dilempar Flutter
+        val widgetData: SharedPreferences = context.getSharedPreferences(
+            "FlutterSharedPreferences", 
+            Context.MODE_PRIVATE
+        )
+
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
-            // 1. Ambil data nama dari Flutter, kalau kosong pakai text default
-            val namaMurid = widgetData.getString("key_nama", "Coach Menu Active")
-            views.setTextViewText(R.id.tv_nama_murid, namaMurid)
+            // Mengambil string dengan kunci dari Flutter (menggunakan prefix bawaan shared_preferences)
+            // Di Flutter, shared_preferences otomatis menambah awalan 'flutter.' di memorinya
+            val namaMurid = widgetData.getString("flutter.saved_nama", "Coach Menu Active")
+            val statusData = widgetData.getString("flutter.saved_status", "Sistem Siap Tempur")
 
-            // 2. Ambil data status dari Flutter, kalau kosong pakai text default
-            val statusData = widgetData.getString("key_status", "Sistem Siap Tempur")
+            views.setTextViewText(R.id.tv_nama_murid, namaMurid)
             views.setTextViewText(R.id.tv_status_data, statusData)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
