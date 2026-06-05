@@ -3,8 +3,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Menggunakan ApplicationExtension sesuai perintah eror robot
-configure<com.android.build.api.dsl.ApplicationExtension> {
+android {
     namespace = "com.heruwngchn.addhmescrn"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -12,11 +11,6 @@ configure<com.android.build.api.dsl.ApplicationExtension> {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    // Menggunakan compilerOptions baru untuk menggantikan kotlinOptions yang usang
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 
     defaultConfig {
