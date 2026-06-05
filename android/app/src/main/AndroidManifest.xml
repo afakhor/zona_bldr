@@ -3,8 +3,10 @@
         android:label="Zona Beladiri"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        
+        <!-- Pastikan nama MainActivity ditulis lengkap dengan jalurnya -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.heruwngchn.addhmescrn.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -21,7 +23,8 @@
             </intent-filter>
         </activity>
         
-        <receiver android:name="HomeScreenWidgetProvider" android:exported="true">
+        <!-- Registrasi Lengkap untuk Provider Widget -->
+        <receiver android:name="com.heruwngchn.addhmescrn.HomeScreenWidgetProvider" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
