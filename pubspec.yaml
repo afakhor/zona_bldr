@@ -36,9 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.8
   shared_preferences: ^2.5.5
-  home_widget: ^0.9.2
-  path_provider: ^2.1.5
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
