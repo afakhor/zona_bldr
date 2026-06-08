@@ -91,10 +91,10 @@ Future<void> autoUpdateHomescreenWidget({
     await HomeWidget.saveWidgetData<String>('img_path', file.path);
     await HomeWidget.saveWidgetData<String>('nama_atlet', activeMurid.nama);
     await HomeWidget.updateWidget(
-      name: 'DashboardWidgetProvider',
-      androidName: 'DashboardWidgetProvider',
-      iOSName: 'DashboardWidget',
-    );
+  name: 'WidgetProvider',
+  androidName: 'WidgetProvider', 
+  iOSName: 'DashboardWidget',
+);
     
     debugPrint("🚀 Widget Homescreen Berhasil Diperbarui: ${activeMurid.nama}");
   } catch (e) {
