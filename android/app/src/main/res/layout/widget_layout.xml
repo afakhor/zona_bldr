@@ -1,45 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#B71C1C"
-    android:gravity="center_vertical">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/widget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ZONA BELADIRI"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.1" />
-
-    <View
-        android:layout_width="40dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="12dp"
-        android:background="#FFEB3B" />
-
-    <TextView
-        android:id="@+id/tv_nama_murid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Coach Menu Active"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv_status_data"
+        android:id="@+id/widget_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="Sistem Siap Tempur"
-        android:textColor="#FFCDD2"
         android:textSize="12sp" />
 
 </LinearLayout>
