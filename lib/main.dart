@@ -20,93 +20,22 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 // Controller global biar bisa dipakai di fungsi
+
 final ScreenshotController widgetScreenshotController = ScreenshotController();
 
 class WidgetScreenshotHelper {
-  
-  // 1. Fungsi utama yang di-capture
-  static Widget buildFullHomescreenWidget() {
+  static Widget buildFullHomescreenWidget({
+    required Murid activeMurid,
+    required List<double> teamBoxAverages,
+    required List<double> teamRadarAverages,
+  }) {
     return Container(
       width: 320,
-      height: 400,
-      color: Color(0xFF0F172A),
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('000 - BELUM ADA SISWA', 
-            style: TextStyle(color: Color(0xFF38BDF8), fontSize: 14, fontWeight: FontWeight.bold)),
-          
-          SizedBox(height: 8),
-          
-          // BOXPLOT pake fungsi _buildStatDot di sini
-          Expanded(
-            flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatDot('STR', 0.0),
-                _buildStatDot('END', 0.0),
-                _buildStatDot('SPD', 0.0),
-                _buildStatDot('CRD', 0.0),
-                _buildStatDot('FLX', 0.0),
-                _buildStatDot('BAL', 0.0),
-                _buildStatDot('REA', 0.0),
-              ],
-            ),
-          ),
-          
-          SizedBox(height: 12),
-          
-          // RADAR CHART
-          Expanded(
-            flex: 3,
-            child: MetaRadarChart(
-  dataIndividu: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  rataRataTim: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 2. Fungsi helper _buildStatDot taruh di sini, di dalam class yang sama
-  static Widget _buildStatDot(String label, double value) {
-    return Column(
-      children: [
-        Container(
-          width: 8, height: 8,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: value == 0.0 
-              ? Colors.red.withOpacity(0.3)  // Redup kalo 0
-              : Colors.red,
-          ),
-        ),
-        SizedBox(height: 2),
-        Text(label, style: TextStyle(fontSize: 9, color: Colors.grey)),
-      ],
-    );
-  }
-}
-
-// Ganti fungsi kamu yang lama
-Future<void> autoUpdateHomescreenWidget({
-  required BuildContext context,
-  required Murid activeMurid,
-  required List<double> teamBoxAverages,
-  required List<double> teamRadarAverages,
-}) async {
-  try {
-    // 1. Bikin widget khusus buat di-screenshot. Ukuran fix 320x320 untuk widget 4x4
-    final widgetToCapture = Container(
-      width: 320,
-      height: 320,
-      padding: const EdgeInsets.all(12),
+      height: 360,
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A), // samain sama bg dashboard
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFF0F172A),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
@@ -114,21 +43,23 @@ Future<void> autoUpdateHomescreenWidget({
             '${activeMurid.id} - ${activeMurid.nama}',
             style: const TextStyle(
               color: Color(0xFF38BDF8),
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w900,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
-          // Boxplot di atas, ukuran kecil
+          const SizedBox(height: 6),
           Expanded(
+            flex: 2,
             child: MetaBoxplotChart(
               boxData: activeMurid.boxData,
               teamAverages: teamBoxAverages,
             ),
           ),
-          const SizedBox(height: 8),
-          // Radar di bawah
+          const SizedBox(height: 6),
           Expanded(
+            flex: 3,
             child: MetaRadarChart(
               dataIndividu: activeMurid.radarData,
               rataRataTim: teamRadarAverages,
@@ -137,40 +68,52 @@ Future<void> autoUpdateHomescreenWidget({
         ],
       ),
     );
-
-    // 2. Screenshot widget tadi
-    final imageBytes = await widgetScreenshotController.captureFromWidget(
-      MediaQuery( // kasih MediaQuery dummy biar nggak error
-        data: const MediaQueryData(),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: widgetToCapture,
-        ),
-      ),
-      pixelRatio: 1.0, // tajam
-      delay: const Duration(milliseconds: 100), // kasih waktu render
-    );
-
-    // 3. Simpan ke file yang bisa diakses widget native
-    final dir = await getApplicationSupportDirectory();
-    final file = File('${dir.path}/dashboard_widget.png');
-    await file.writeAsBytes(imageBytes);
-
-    // 4. Kirim ke widget homescreen
-    await HomeWidget.saveWidgetData<String>('img_path', file.path);
-    await HomeWidget.saveWidgetData<String>('nama_atlet', activeMurid.nama);
-    await HomeWidget.updateWidget(
-  name: 'WidgetProvider',
-  androidName: 'WidgetProvider', 
-  iOSName: 'DashboardWidget',
-);
-    
-    debugPrint("🚀 Widget Homescreen Berhasil Diperbarui: ${activeMurid.nama}");
-  } catch (e) {
-    debugPrint("⚠️ Gagal update widget: $e");
   }
 }
 
+class WidgetService {
+  static Future<void> autoUpdateHomescreenWidget({
+    required BuildContext context,
+    required Murid activeMurid,
+    required List<double> teamBoxAverages,
+    required List<double> teamRadarAverages,
+  }) async {
+    try {
+      // Langsung capture pake helper, nggak perlu bikin Container lagi
+      final imageBytes = await widgetScreenshotController.captureFromWidget(
+        MediaQuery(
+          data: const MediaQueryData(),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: WidgetScreenshotHelper.buildFullHomescreenWidget(
+              activeMurid: activeMurid,
+              teamBoxAverages: teamBoxAverages,
+              teamRadarAverages: teamRadarAverages,
+            ),
+          ),
+        ),
+        pixelRatio: 1.2,
+        delay: const Duration(milliseconds: 100),
+      );
+
+      final dir = await getApplicationSupportDirectory();
+      final file = File('${dir.path}/dashboard_widget.png');
+      await file.writeAsBytes(imageBytes);
+
+      await HomeWidget.saveWidgetData<String>('img_path', file.path);
+      await HomeWidget.saveWidgetData<String>('nama_atlet', activeMurid.nama);
+      await HomeWidget.updateWidget(
+        name: 'WidgetProvider',
+        androidName: 'WidgetProvider',
+        iOSName: 'DashboardWidget',
+      );
+
+      debugPrint("🚀 Widget Homescreen Berhasil Diperbarui: ${activeMurid.nama}");
+    } catch (e) {
+      debugPrint("⚠️ Gagal update widget: $e");
+    }
+  }
+}
 void main() {
 
 
