@@ -41,18 +41,21 @@ jobs:
           #sed -i '/android {/a \    namespace "es.antonborri.home_widget"' $HOME/.pub-cache/hosted/pub.dev/home_widget-0.3.0/android/build.gradle
 
       - name: Setup Keystore untuk Release
-        run: |
-          keytool -genkey -v -keystore android/app/upload-keystore.jks \
+  run: |
+    rm -f android/app/upload-keystore.jks
+    rm -f android/key.properties
+    
+    keytool -genkey -v -keystore android/app/upload-keystore.jks \
     -alias heruwingchun -keyalg RSA -keysize 2048 -validity 10000 \
     -storepass heruhapki -keypass heruhapki \
     -dname "CN=ZonaBeladiri, OU=App, O=Heru, L=Probolinggo, ST=Jatim, C=ID"
-          
-          cat > android/key.properties <<EOF
-          storePassword=heruwingchun 
-          keyPassword=heruhapki
-          keyAlias=upload
-          storeFile=upload-keystore.jks
-          EOF
+
+    cat > android/key.properties <<EOF
+    storePassword=heruhapki
+    keyPassword=heruhapki
+    keyAlias=heruwingchun
+    storeFile=upload-keystore.jks
+    EOF
 
       - name: Compile Menjadi APK Release
         run: flutter build apk --release --split-per-abi
