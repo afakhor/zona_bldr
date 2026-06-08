@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0F172A"
-    android:clipChildren="true"> 
+    android:clipChildren="true"
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/widget_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"  
-        android:adjustViewBounds="true"  
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:visibility="gone" />
 
     <TextView
