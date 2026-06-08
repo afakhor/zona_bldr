@@ -11,47 +11,95 @@ import 'package:shared_preferences/shared_preferences.dart';
 //untuk homescreen widget
 //import 'package:home_widget/home_widget.dart';
 //import 'package:path_provider/path_provider.dart';
+//import 'dart:io';
+//import 'dart:ui' as ui;
+
+import 'package:screenshot/screenshot.dart';
+import 'package:home_widget/home_widget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'dart:ui' as ui;
 
-// 1. KUNCI FOTO DI LUAR CLASS (GLOBAL)
-final GlobalKey kunciFotoOtomatis = GlobalKey();
+// Controller global biar bisa dipakai di fungsi
+final ScreenshotController widgetScreenshotController = ScreenshotController();
 
-// 2. FUNGSI PENGIRIM GAMBAR - VERSI AMAN (ANTI-CRASH MEMORI)
-Future<void> autoUpdateHomescreenWidget(String namaAtlet) async {
-  /*try {
-    // Pastikan context grafik dashboard-nya eksis dan terdeteksi kamera
-    final boundaryContext = kunciFotoOtomatis.currentContext;
-    if (boundaryContext == null) return;
+// Ganti fungsi kamu yang lama
+Future<void> autoUpdateHomescreenWidget({
+  required BuildContext context,
+  required Murid activeMurid,
+  required List<double> teamBoxAverages,
+  required List<double> teamRadarAverages,
+}) async {
+  try {
+    // 1. Bikin widget khusus buat di-screenshot. Ukuran fix 320x320 untuk widget 4x4
+    final widgetToCapture = Container(
+      width: 320,
+      height: 320,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A), // samain sama bg dashboard
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Text(
+            '${activeMurid.id} - ${activeMurid.nama}',
+            style: const TextStyle(
+              color: Color(0xFF38BDF8),
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Boxplot di atas, ukuran kecil
+          Expanded(
+            child: MetaBoxplotChart(
+              boxData: activeMurid.boxData,
+              teamAverages: teamBoxAverages,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Radar di bawah
+          Expanded(
+            child: MetaRadarChart(
+              dataIndividu: activeMurid.radarData,
+              rataRataTim: teamRadarAverages,
+            ),
+          ),
+        ],
+      ),
+    );
 
-    final RenderRepaintBoundary? boundary = boundaryContext.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null) return;
+    // 2. Screenshot widget tadi
+    final imageBytes = await widgetScreenshotController.captureFromWidget(
+      MediaQuery( // kasih MediaQuery dummy biar nggak error
+        data: const MediaQueryData(),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: widgetToCapture,
+        ),
+      ),
+      pixelRatio: 3.0, // tajam
+      delay: const Duration(milliseconds: 100), // kasih waktu render
+    );
 
-    // Jepret gambar dengan rasio tinggi agar grafik di widget HP tajam tidak buram
-    ui.Image image = await boundary.toImage(pixelRatio: 2.0);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    if (byteData == null) return;
+    // 3. Simpan ke file yang bisa diakses widget native
+    final dir = await getApplicationSupportDirectory();
+    final file = File('${dir.path}/dashboard_widget.png');
+    await file.writeAsBytes(imageBytes);
 
-    // Konversi byte yang aman dan kompatibel dengan Flutter versi baru
-    final Uint8List bytes = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-
-    // Ambil alamat penyimpanan internal HP untuk menaruh file foto sementara
-    final direktoriHP = await getApplicationDocumentsDirectory();
-    final fileGambar = File('${direktoriHP.path}/grafik_atlet_live.png');
-    await fileGambar.writeAsBytes(bytes);*/
-
-    // Kirim data Nama dan Alamat Foto menembus jembatan native Android
-    await HomeWidget.saveWidgetData<String>('key_nama', namaAtlet);
-    await HomeWidget.saveWidgetData<String>('key_path_grafik', fileGambar.path);
-
-    // Perintahkan class Java untuk memaksa Widget di layar HP melakukan refresh/update visual
+    // 4. Kirim ke widget homescreen
+    await HomeWidget.saveWidgetData<String>('img_path', file.path);
+    await HomeWidget.saveWidgetData<String>('nama_atlet', activeMurid.nama);
     await HomeWidget.updateWidget(
-  name: 'AtletWidgetProvider',
-);/*
-    print("🚀 Widget Homescreen Berhasil Diperbarui Secara Realtime!");
+      name: 'DashboardWidgetProvider',
+      androidName: 'DashboardWidgetProvider',
+      iOSName: 'DashboardWidget',
+    );
+    
+    debugPrint("🚀 Widget Homescreen Berhasil Diperbarui: ${activeMurid.nama}");
   } catch (e) {
-    debugPrint("⚠️ Gagal otomatisasi update widget: $e");
-  }*/
+    debugPrint("⚠️ Gagal update widget: $e");
+  }
 }
 
 void main() {
@@ -854,9 +902,13 @@ class DashboardAtletPage extends StatelessWidget {
   Widget build(BuildContext context) {
 // 3. TARUH PEMICU OTOMATISNYA DI SINI (Tepat setelah kurung kurawal build)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      autoUpdateHomescreenWidget(activeMurid.nama);
-    });
-
+    autoUpdateHomescreenWidget(
+      context: context,
+      activeMurid: activeMurid,
+      teamBoxAverages: teamBoxAverages,
+      teamRadarAverages: teamRadarAverages,
+    );
+  });
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A), // Navy Deep
       appBar: AppBar(
