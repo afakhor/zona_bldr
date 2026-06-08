@@ -215,7 +215,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         height: lebarHP * 0.70,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/splash.png'),
+                            image: AssetImage('assets/images/splash.png'),
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -293,7 +293,7 @@ class SplashPageRoute extends PageRouteBuilder {
                         child: ScaleTransition(
                           scale: gerakanSirkular,
                           child: Image.asset(
-                            'assets/splash.png', 
+                            'assets/images/splash.png', 
                             width: lebarHP * 0.45, 
                             fit: BoxFit.contain,
                           ),
