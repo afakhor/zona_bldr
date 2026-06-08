@@ -22,6 +22,72 @@ import 'dart:io';
 // Controller global biar bisa dipakai di fungsi
 final ScreenshotController widgetScreenshotController = ScreenshotController();
 
+class WidgetScreenshotHelper {
+  
+  // 1. Fungsi utama yang di-capture
+  static Widget buildFullHomescreenWidget() {
+    return Container(
+      width: 320,
+      height: 400,
+      color: Color(0xFF0F172A),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text('000 - BELUM ADA SISWA', 
+            style: TextStyle(color: Color(0xFF38BDF8), fontSize: 14, fontWeight: FontWeight.bold)),
+          
+          SizedBox(height: 8),
+          
+          // BOXPLOT pake fungsi _buildStatDot di sini
+          Expanded(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatDot('STR', 0.0),
+                _buildStatDot('END', 0.0),
+                _buildStatDot('SPD', 0.0),
+                _buildStatDot('CRD', 0.0),
+                _buildStatDot('FLX', 0.0),
+                _buildStatDot('BAL', 0.0),
+                _buildStatDot('REA', 0.0),
+              ],
+            ),
+          ),
+          
+          SizedBox(height: 12),
+          
+          // RADAR CHART
+          Expanded(
+            flex: 3,
+            child: RadarChartWidget(data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 2. Fungsi helper _buildStatDot taruh di sini, di dalam class yang sama
+  static Widget _buildStatDot(String label, double value) {
+    return Column(
+      children: [
+        Container(
+          width: 8, height: 8,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: value == 0.0 
+              ? Colors.red.withOpacity(0.3)  // Redup kalo 0
+              : Colors.red,
+          ),
+        ),
+        SizedBox(height: 2),
+        Text(label, style: TextStyle(fontSize: 9, color: Colors.grey)),
+      ],
+    );
+  }
+}
+
 // Ganti fungsi kamu yang lama
 Future<void> autoUpdateHomescreenWidget({
   required BuildContext context,
