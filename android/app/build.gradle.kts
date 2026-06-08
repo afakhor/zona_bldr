@@ -50,15 +50,3 @@ flutter {
 }
 
 dependencies {}
-
-// Hapus blok subprojects kalau bikin error. Pake ini aja:
-subprojects {
-    afterEvaluate {
-        if (hasProperty("android")) {
-            extensions.configure<com.android.build.gradle.BaseExtension>("android") {
-                compileSdkVersion = 34
-                buildToolsVersion = "34.0.0"
-            }
-        }
-    }
-}
