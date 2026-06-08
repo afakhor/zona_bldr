@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.zona_bldr" // Ganti sesuai package kamu
+    namespace = "com.heruwingchn.addhmescrn" // Ganti sesuai package kamu
     compileSdk = 34
     
     defaultConfig {
