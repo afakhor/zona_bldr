@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/widget_background"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@drawable/widget_background">
 
+    <!-- Gambar hasil screenshot -->
+    <ImageView
+        android:id="@+id/widget_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- Placeholder kalau gambar belum ada -->
     <TextView
-        android:id="@+id/widget_title"
+        android:id="@+id/widget_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_gravity="center"
+        android:text="Tap refresh"
+        android:textColor="#38BDF8" />
 
+    <!-- Nama atlet overlay di bawah -->
     <TextView
-        android:id="@+id/widget_message"
-        android:layout_width="wrap_content"
+        android:id="@+id/widget_nama"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#80000000"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="#FFFFFF"
         android:textSize="12sp" />
 
-</LinearLayout>
+</FrameLayout>
