@@ -38,7 +38,7 @@ Future<void> autoUpdateHomescreenWidget(String namaAtlet) async {
     // Ambil alamat penyimpanan internal HP untuk menaruh file foto sementara
     final direktoriHP = await getApplicationDocumentsDirectory();
     final fileGambar = File('${direktoriHP.path}/grafik_atlet_live.png');
-    await fileGambar.writeAsBytes(bytes);
+    await fileGambar.writeAsBytes(bytes);*/
 
     // Kirim data Nama dan Alamat Foto menembus jembatan native Android
     await HomeWidget.saveWidgetData<String>('key_nama', namaAtlet);
@@ -47,7 +47,7 @@ Future<void> autoUpdateHomescreenWidget(String namaAtlet) async {
     // Perintahkan class Java untuk memaksa Widget di layar HP melakukan refresh/update visual
     await HomeWidget.updateWidget(
   name: 'AtletWidgetProvider',
-);
+);/*
     print("🚀 Widget Homescreen Berhasil Diperbarui Secara Realtime!");
   } catch (e) {
     debugPrint("⚠️ Gagal otomatisasi update widget: $e");
