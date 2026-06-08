@@ -36,9 +36,9 @@ jobs:
           flutter pub run flutter_launcher_icons || true
           flutter pub run flutter_native_splash:create || true
      
-      *- name: Patch home_widget namespace
-        run: |
-          sed -i '/android {/a \    namespace "es.antonborri.home_widget"' $HOME/.pub-cache/hosted/pub.dev/home_widget-0.3.0/android/build.gradle*
+      #- name: Patch home_widget namespace
+       # run: |
+          #sed -i '/android {/a \    namespace "es.antonborri.home_widget"' $HOME/.pub-cache/hosted/pub.dev/home_widget-0.3.0/android/build.gradle
 
       - name: Compile Menjadi APK Debug
         run: |
