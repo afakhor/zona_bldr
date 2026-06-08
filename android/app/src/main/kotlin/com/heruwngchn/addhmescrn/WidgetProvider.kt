@@ -3,8 +3,10 @@ package com.heruwngchn.addhmescrn
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.BitmapFactory
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetProvider
+import java.io.File
 
 class WidgetProvider : HomeWidgetProvider() {
 
@@ -12,14 +14,23 @@ class WidgetProvider : HomeWidgetProvider() {
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.widget_layout).apply {
                 
-                // Data dari Flutter via home_widget
-                val title = widgetData.getString("title", "Zona Beladiri")
-                val message = widgetData.getString("message", "Tap untuk buka app")
+                // Ambil path gambar dari Flutter
+                val imagePath = widgetData.getString("img_path", null)
+                val namaAtlet = widgetData.getString("nama_atlet", "Zona Beladiri")
                 
-                setTextViewText(R.id.widget_title, title)
-                setTextViewText(R.id.widget_message, message)
+                if (imagePath != null && File(imagePath).exists()) {
+                    val bitmap = BitmapFactory.decodeFile(imagePath)
+                    setImageViewBitmap(R.id.widget_image, bitmap)
+                    setViewVisibility(R.id.widget_image, android.view.View.VISIBLE)
+                    setViewVisibility(R.id.widget_placeholder, android.view.View.GONE)
+                } else {
+                    setViewVisibility(R.id.widget_image, android.view.View.GONE)
+                    setViewVisibility(R.id.widget_placeholder, android.view.View.VISIBLE)
+                }
 
-                // Klik widget -> buka app Flutter
+                setTextViewText(R.id.widget_nama, namaAtlet)
+
+                // Klik widget -> buka app
                 val pendingIntent = getFlutterAppPendingIntent(context)
                 setOnClickPendingIntent(R.id.widget_container, pendingIntent)
             }
