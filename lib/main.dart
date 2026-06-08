@@ -9,8 +9,8 @@ import 'dart:async';
 import 'dart:convert';//taruh do atas paketshared
 import 'package:shared_preferences/shared_preferences.dart';
 //untuk homescreen widget
-import 'package:home_widget/home_widget.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:home_widget/home_widget.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
