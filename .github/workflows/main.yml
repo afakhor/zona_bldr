@@ -42,10 +42,10 @@ jobs:
 
       - name: Setup Keystore untuk Release
         run: |
-          keytool -genkey -v -keystore android/app/upload-keystore.jks -alias upload \
-          -keyalg RSA -keysize 2048 -validity 10000 \
-          -storepass heruwingchun -keypass heruhapki \
-          -dname "CN=ZonaBeladiri, OU=App, O=Heru, L=Probolinggo, ST=Jatim, C=ID"
+          keytool -genkey -v -keystore android/app/upload-keystore.jks \
+    -alias heruwingchun -keyalg RSA -keysize 2048 -validity 10000 \
+    -storepass heruhapki -keypass heruhapki \
+    -dname "CN=ZonaBeladiri, OU=App, O=Heru, L=Probolinggo, ST=Jatim, C=ID"
           
           cat > android/key.properties <<EOF
           storePassword=heruwingchun 
