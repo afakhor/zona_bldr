@@ -12,12 +12,10 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
-
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// WAJIB ADA INI BUAT AGP 8 + Flutter 3.22
 plugins {
     id("com.android.application") version "8.1.0" apply false
     id("com.android.library") version "8.1.0" apply false
