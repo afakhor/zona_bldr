@@ -24,7 +24,7 @@
         </activity>
         
         <!-- Registrasi Lengkap untuk Provider Widget -->
-        <receiver android:name=".WidgetProvider" android:exported="true">
+       <receiver android:name=".WidgetProvider" android:exported="true">
     <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
     </intent-filter>
