@@ -61,7 +61,10 @@ class WidgetScreenshotHelper {
           // RADAR CHART
           Expanded(
             flex: 3,
-            child: RadarChartWidget(data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
+            child: MetaRadarChart(
+  dataIndividu: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  rataRataTim: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+),
           ),
         ],
       ),
