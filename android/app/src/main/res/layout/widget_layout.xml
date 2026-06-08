@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0F172A"
-    android:clipChildren="true">  <!-- Tambah ini biar nggak bocor -->
+    android:clipChildren="true"> 
 
     <ImageView
         android:id="@+id/widget_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"    <!-- Ini kuncinya -->
-        android:adjustViewBounds="true"   <!-- Tambah ini -->
+        android:scaleType="centerCrop"  
+        android:adjustViewBounds="true"  
         android:visibility="gone" />
 
     <TextView
