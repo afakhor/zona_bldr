@@ -78,7 +78,7 @@ Future<void> autoUpdateHomescreenWidget({
           child: widgetToCapture,
         ),
       ),
-      pixelRatio: 3.0, // tajam
+      pixelRatio: 1.0, // tajam
       delay: const Duration(milliseconds: 100), // kasih waktu render
     );
 
