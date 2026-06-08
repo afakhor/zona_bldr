@@ -19,7 +19,7 @@ final GlobalKey kunciFotoOtomatis = GlobalKey();
 
 // 2. FUNGSI PENGIRIM GAMBAR - VERSI AMAN (ANTI-CRASH MEMORI)
 Future<void> autoUpdateHomescreenWidget(String namaAtlet) async {
-  try {
+  /*try {
     // Pastikan context grafik dashboard-nya eksis dan terdeteksi kamera
     final boundaryContext = kunciFotoOtomatis.currentContext;
     if (boundaryContext == null) return;
@@ -51,7 +51,7 @@ Future<void> autoUpdateHomescreenWidget(String namaAtlet) async {
     print("🚀 Widget Homescreen Berhasil Diperbarui Secara Realtime!");
   } catch (e) {
     debugPrint("⚠️ Gagal otomatisasi update widget: $e");
-  }
+  }*/
 }
 
 void main() {
