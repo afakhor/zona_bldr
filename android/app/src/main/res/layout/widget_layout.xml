@@ -3,9 +3,8 @@
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/widget_background">
+    android:background="#0F172A">  <!-- Ganti dari @drawable/widget_background -->
 
-    <!-- Gambar hasil screenshot -->
     <ImageView
         android:id="@+id/widget_image"
         android:layout_width="match_parent"
@@ -13,7 +12,6 @@
         android:scaleType="centerCrop"
         android:visibility="gone" />
 
-    <!-- Placeholder kalau gambar belum ada -->
     <TextView
         android:id="@+id/widget_placeholder"
         android:layout_width="wrap_content"
@@ -22,7 +20,6 @@
         android:text="Tap refresh"
         android:textColor="#38BDF8" />
 
-    <!-- Nama atlet overlay di bawah -->
     <TextView
         android:id="@+id/widget_nama"
         android:layout_width="match_parent"
