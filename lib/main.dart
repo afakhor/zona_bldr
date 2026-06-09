@@ -895,29 +895,10 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
 }
 
 // ==================== HALAMAN 1: DASHBOARD PERFORMANCE ====================
-class DashboardAtletPage extends StatefulWidget {
-  final Murid activeMurid;
-  final List<double> teamBoxAverages;
-  final List<double> teamRadarAverages;
-  final int Function(String) dapatkanBoxIndexFunc;
-
-  const DashboardAtletPage({
-    Key? key, 
-    required this.activeMurid, 
-    required this.teamBoxAverages, 
-    required this.teamRadarAverages, 
-    required this.dapatkanBoxIndexFunc
-  }) : super(key: key);
-
-@override
-  State<DashboardAtletPage> createState() => _DashboardAtletPageState();
-}
-
 class _DashboardAtletPageState extends State<DashboardAtletPage> {
   @override
   void initState() {
     super.initState();
-    // Panggil sekali pas buka halaman
     WidgetsBinding.instance.addPostFrameCallback((_) {
       WidgetService.autoUpdateHomescreenWidget(
         context: context,
@@ -931,10 +912,9 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
   @override
   void didUpdateWidget(covariant DashboardAtletPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Update widget kalo ganti atlet
-  if (oldWidget.activeMurid.id != widget.activeMurid.id ||
-      oldWidget.teamBoxAverages != widget.teamBoxAverages ||
-      oldWidget.teamRadarAverages != widget.teamRadarAverages) {
+    if (oldWidget.activeMurid.id!= widget.activeMurid.id ||
+        oldWidget.teamBoxAverages!= widget.teamBoxAverages ||
+        oldWidget.teamRadarAverages!= widget.teamRadarAverages) {
       WidgetService.autoUpdateHomescreenWidget(
         context: context,
         activeMurid: widget.activeMurid,
@@ -945,58 +925,90 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: const Color(0xFF0F172A),
-    appBar: AppBar(
-      backgroundColor: const Color(0xFFF8FAFC),
-      title: const Text(
-        "PAPAN PERFORMA", 
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))
-      ), 
-      elevation: 0,
-      centerTitle: true,
-      iconTheme: const IconThemeData(color: Color(0xFF1E293B)), 
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ==================== KARTU PROFIL ATLET ====================
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E293B), 
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF334155), width: 1), 
+  Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+    const headerHeight = 135.0; // Tinggi AppBar + Card Profil. Sesuaikan kalau perlu
+
+    return Scaffold(
+      // 1. Wajib biar body nembus ke atas layar
+      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xFF0F172A),
+
+      // 2. HAPUS appBar: AppBar(...), pindah ke SliverAppBar di body
+      body: CustomScrollView(
+        slivers: [
+          // 3. AppBar + Card Profil yang default-nya hidden
+          SliverAppBar(
+            backgroundColor: const Color(0xFFF8FAFC),
+            elevation: 0,
+            centerTitle: true,
+            iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
+
+            // Kunci: AppBar hilang default, muncul pas scroll ke bawah
+            pinned: false,
+            floating: true,
+            snap: true,
+
+            expandedHeight: headerHeight,
+            collapsedHeight: kToolbarHeight,
+
+            title: const Text(
+              "PAPAN PERFORMA",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'PAPAN PERFORMA KOMPREHENSIF',
-                  style: TextStyle(
-                    color: Colors.blueGrey[300],
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
+
+            // 4. Pindahin KARTU PROFIL ATLET ke sini
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color: const Color(0xFFF8FAFC),
+                padding: EdgeInsets.only(
+                  top: kToolbarHeight + topPadding + 8,
+                  left: 16,
+                  right: 16,
+                  bottom: 12,
+                ),
+                alignment: Alignment.bottomCenter,
+                // ==================== KARTU PROFIL ATLET ====================
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFF334155), width: 1),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'PAPAN PERFORMA KOMPREHENSIF',
+                        style: TextStyle(
+                          color: Colors.blueGrey[300],
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${widget.activeMurid.id} - ${widget.activeMurid.nama}',
+                        style: const TextStyle(
+                          color: Color(0xFF38BDF8),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  '${widget.activeMurid.id} - ${widget.activeMurid.nama}', // <- DIUBAH
-                  style: const TextStyle(
-                    color: Color(0xFF38BDF8), 
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
+          ),        const SizedBox(height: 16),
 
           // ==================== GRAFIK BOXPLOT ====================
           Container(
