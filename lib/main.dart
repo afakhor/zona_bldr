@@ -895,7 +895,7 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
 }
 
 // ==================== HALAMAN 1: DASHBOARD PERFORMANCE ====================
-class DashboardAtletPage extends StatelessWidget {
+class DashboardAtletPage extends StatefulWidget {
   final Murid activeMurid;
   final List<double> teamBoxAverages;
   final List<double> teamRadarAverages;
@@ -909,18 +909,43 @@ class DashboardAtletPage extends StatelessWidget {
     required this.dapatkanBoxIndexFunc
   }) : super(key: key);
 
+@override
+  State<DashboardAtletPage> createState() => _DashboardAtletPageState();
+}
+
+class _DashboardAtletPageState extends State<DashboardAtletPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Panggil sekali pas buka halaman
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetService.autoUpdateHomescreenWidget(
+        context: context,
+        activeMurid: widget.activeMurid,
+        teamBoxAverages: widget.teamBoxAverages,
+        teamRadarAverages: widget.teamRadarAverages,
+      );
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant DashboardAtletPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update widget kalo ganti atlet
+  if (oldWidget.activeMurid.id != widget.activeMurid.id ||
+      oldWidget.teamBoxAverages != widget.teamBoxAverages ||
+      oldWidget.teamRadarAverages != widget.teamRadarAverages) {
+      WidgetService.autoUpdateHomescreenWidget(
+        context: context,
+        activeMurid: widget.activeMurid,
+        teamBoxAverages: widget.teamBoxAverages,
+        teamRadarAverages: widget.teamRadarAverages,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-// 3. TARUH PEMICU OTOMATISNYA DI SINI (Tepat setelah kurung kurawal build)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    autoUpdateHomescreenWidget(
-      context: context,
-      activeMurid: activeMurid,
-      teamBoxAverages: teamBoxAverages,
-      teamRadarAverages: teamRadarAverages,
-    );
-  });
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A), // Navy Deep
       appBar: AppBar(
