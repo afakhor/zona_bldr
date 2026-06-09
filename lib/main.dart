@@ -895,6 +895,23 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
 }
 
 // ==================== HALAMAN 1: DASHBOARD PERFORMANCE ====================
+class DashboardAtletPage extends StatefulWidget {
+  final Murid activeMurid;
+  final List<double> teamBoxAverages;
+  final List<double> teamRadarAverages;
+  final int Function(String) dapatkanBoxIndexFunc;
+
+  const DashboardAtletPage({
+    Key? key,
+    required this.activeMurid,
+    required this.teamBoxAverages,
+    required this.teamRadarAverages,
+    required this.dapatkanBoxIndexFunc,
+  }) : super(key: key);
+
+  @override
+  State<DashboardAtletPage> createState() => _DashboardAtletPageState();
+}
 class _DashboardAtletPageState extends State<DashboardAtletPage> {
   @override
   void initState() {
