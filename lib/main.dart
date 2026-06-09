@@ -31,7 +31,7 @@ class WidgetScreenshotHelper {
   }) {
     return Container(
       width: 320,
-      height: 360,
+      height: 450,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFF0F172A),
@@ -92,7 +92,7 @@ class WidgetService {
             ),
           ),
         ),
-        pixelRatio: 1.2,
+        pixelRatio: 3.0,
         delay: const Duration(milliseconds: 100),
       );
 
@@ -959,11 +959,11 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
               pinned: false,
               floating: true,
               snap: true,
-              expandedHeight: 160, // Tinggi total AppBar + Kartu Profil
+              expandedHeight: 90, // Tinggi total AppBar + Kartu Profil
               title: const Text(
                 "PAPAN PERFORMA",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E293B),
                 ),
@@ -972,10 +972,10 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
                 background: Container(
                   color: const Color(0xFFF8FAFC),
                   padding: EdgeInsets.only(
-                    top: kToolbarHeight + topPadding + 8,
+                    top: kToolbarHeight + topPadding + 6,
                     left: 16,
                     right: 16,
-                    bottom: 12,
+                    bottom: 9,
                   ),
                   alignment: Alignment.bottomCenter,
                   // ==================== KARTU PROFIL ATLET ====================
@@ -1005,7 +1005,7 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
                           '${widget.activeMurid.id} - ${widget.activeMurid.nama}',
                           style: const TextStyle(
                             color: Color(0xFF38BDF8),
-                            fontSize: 18,
+                            fontSize: 13,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
