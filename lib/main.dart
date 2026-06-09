@@ -1009,7 +1009,7 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
               ),
             ),
           ),        const SizedBox(height: 16),
-
+        ]
           // ==================== GRAFIK BOXPLOT ====================
           Container(
             width: double.infinity,
