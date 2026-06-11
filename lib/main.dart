@@ -1039,13 +1039,13 @@ Widget build(BuildContext context) {
               fontSize: 18,
               fontWeight: FontWeight.w900,
             ),
-          ), // tutup di sini, jangan ada SizedBox
+          ),
         ],
       ),
     ),
     const SizedBox(height: 16),
   ],
-)
+),),),),),
         // ==================== GRAFIK BOXPLOT ====================
         SliverToBoxAdapter( // <-- TAMBAH INI
           child: Padding(
