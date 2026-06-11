@@ -1012,21 +1012,40 @@ Widget build(BuildContext context) {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      '${widget.activeMurid.id} - ${widget.activeMurid.nama}',
-                      style: const TextStyle(
-                        color: Color(0xFF38BDF8),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: '${widget.activeMurid.id}',
+            style: const TextStyle(
+              color: Color(0xFF94A3B8),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ), // <-- HAPUS `const SizedBox(height: 16),` yang ada di sini
-
+          const TextSpan(
+            text: ' - ',
+            style: TextStyle(
+              color: Color(0xFF38BDF8),
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          TextSpan(
+            text: '${widget.activeMurid.nama}',
+            style: const TextStyle(
+              color: Color(0xFF38BDF8), // biru terang buat nama
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ), // tutup di sini, jangan ada SizedBox
+        ],
+      ),
+    ),
+    const SizedBox(height: 16),
+  ],
+)
         // ==================== GRAFIK BOXPLOT ====================
         SliverToBoxAdapter( // <-- TAMBAH INI
           child: Padding(
