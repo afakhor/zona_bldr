@@ -30,8 +30,8 @@ class WidgetScreenshotHelper {
     required List<double> teamRadarAverages,
   }) {
     return Container(
-      width: 320,
-      height: 450,
+      width: 390,
+      height: 750,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFF0F172A),
@@ -942,236 +942,251 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final topPadding = MediaQuery.of(context).padding.top;
+Widget build(BuildContext context) {
+  final topPadding = MediaQuery.of(context).padding.top;
+  const headerHeight = 135.0; // Tinggi AppBar + Card Profil. Sesuaikan kalau perlu
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              backgroundColor: const Color(0xFFF8FAFC),
-              elevation: 0,
-              centerTitle: true,
-              iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
-              // Kunci: AppBar hilang default, muncul pas scroll ke bawah
-              pinned: false,
-              floating: true,
-              snap: true,
-              expandedHeight: 90, // Tinggi total AppBar + Kartu Profil
-              title: const Text(
-                "PAPAN PERFORMA",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
-                ),
+  return Scaffold(
+    // 1. Wajib biar body nembus ke atas layar
+    extendBodyBehindAppBar: true,
+    backgroundColor: const Color(0xFF0F172A),
+
+    // 2. HAPUS appBar: AppBar(...), pindah ke SliverAppBar di body
+    body: CustomScrollView(
+      slivers: [
+        // 3. AppBar + Card Profil yang default-nya hidden
+        SliverAppBar(
+          backgroundColor: const Color(0xFFF8FAFC),
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
+
+          // Kunci: AppBar hilang default, muncul pas scroll ke bawah
+          pinned: false,
+          floating: true,
+          snap: true,
+
+          expandedHeight: headerHeight,
+          collapsedHeight: kToolbarHeight,
+
+          title: const Text(
+            "PAPAN PERFORMA",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1E293B),
+            ),
+          ),
+
+          // 4. Pindahin KARTU PROFIL ATLET ke sini
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              color: const Color(0xFFF8FAFC),
+              padding: EdgeInsets.only(
+                top: kToolbarHeight + topPadding + 8,
+                left: 16,
+                right: 16,
+                bottom: 12,
               ),
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  color: const Color(0xFFF8FAFC),
-                  padding: EdgeInsets.only(
-                    top: kToolbarHeight + topPadding + 6,
-                    left: 16,
-                    right: 16,
-                    bottom: 9,
-                  ),
-                  alignment: Alignment.bottomCenter,
-                  // ==================== KARTU PROFIL ATLET ====================
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E293B),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF334155), width: 1),
+              alignment: Alignment.bottomCenter,
+              // ==================== KARTU PROFIL ATLET ====================
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF334155), width: 1),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'PAPAN PERFORMA KOMPREHENSIF',
+                      style: TextStyle(
+                        color: Colors.blueGrey[300],
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                      ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'PAPAN PERFORMA KOMPREHENSIF',
-                          style: TextStyle(
-                            color: Colors.blueGrey[300],
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '${widget.activeMurid.id} - ${widget.activeMurid.nama}',
-                          style: const TextStyle(
-                            color: Color(0xFF38BDF8),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 6),
+                    Text(
+                      '${widget.activeMurid.id} - ${widget.activeMurid.nama}',
+                      style: const TextStyle(
+                        color: Color(0xFF38BDF8),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
-          ];
-        },
-        // Body bebas pake Column biasa. Gak error
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ==================== GRAFIK BOXPLOT ====================
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF334155)),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(width: 4, height: 16, color: const Color(0xFF38BDF8)),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'DISTRIBUSI MOTORIK TIM VS INDIVIDU (BOXPLOT)',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Color(0xFF38BDF8)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 250,
-                      child: MetaBoxplotChart(
-                        boxData: widget.activeMurid.boxData,
-                        teamAverages: widget.teamBoxAverages,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // ==================== GRAFIK RADAR ====================
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF334155)),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(width: 4, height: 16, color: const Color(0xFF22C55E)),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'PROFIL BIOMOTORIK METRIKS RADAR (10 DIMENSI)',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Color(0xFF22C55E)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 320,
-                      child: MetaRadarChart(
-                        dataIndividu: widget.activeMurid.radarData,
-                        rataRataTim: widget.teamRadarAverages,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // ==================== TABEL MATRIKS ANALISIS GERAK ====================
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E293B),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF334155)),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(width: 4, height: 16, color: const Color(0xFF10B981)),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'MATRIKS ANALISIS GERAK & REKOMENDASI TAKTIS',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF10B981)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: 1050,
-                        child: Table(
-                          border: TableBorder.all(color: const Color(0xFF334155), width: 1),
-                          columnWidths: const {
-                            0: FlexColumnWidth(1.8),
-                            1: FlexColumnWidth(2.3),
-                            2: FlexColumnWidth(2.5),
-                            3: FlexColumnWidth(2.3),
-                            4: FlexColumnWidth(2.3),
-                            5: FlexColumnWidth(3.4)
-                          },
-                          children: [
-                            TableRow(
-                              decoration: const BoxDecoration(color: Color(0xFF0F172A)),
-                              children: [
-                                _buildHeaderCell('KOMPONEN'),
-                                _buildHeaderCell('POLA BOXPLOT'),
-                                _buildHeaderCell('ARTI POLA'),
-                                _buildHeaderCell('KELEBIHAN'),
-                                _buildHeaderCell('KEKURANGAN'),
-                                _buildHeaderCell('REKOMENDASI')
-                              ],
-                            ),
-                            _buildEvaluasiRow('STRENGTH', 'BOXPLOT', 0),
-                            _buildEvaluasiRow('ENDURANCE', 'BOXPLOT', 1),
-                            _buildEvaluasiRow('SPEED', 'BOXPLOT', 2),
-                            _buildEvaluasiRow('COORDINATION', 'BOXPLOT', 3),
-                            _buildEvaluasiRow('FLEXIBILITY', 'BOXPLOT', 4),
-                            _buildEvaluasiRow('BALANCE', 'BOXPLOT', 5),
-                            _buildEvaluasiRow('REACTION TIME', 'BOXPLOT', 6),
-                            _buildEvaluasiRow('MUSCULAR ENDURANCE', 'BOXPLOT', 1),
-                            _buildEvaluasiRow('POWER', 'BOXPLOT', 0),
-                            _buildEvaluasiRow('CORE STABILITY', 'BOXPLOT', 0),
-                            _buildEvaluasiRow('DYNAMIC FLEXIBILITY', 'BOXPLOT', 4),
-                            _buildEvaluasiRow('SPEED ENDURANCE', 'BOXPLOT', 2),
-                            _buildEvaluasiRow('REACTIVE SPEED / QUICKNESS', 'BOXPLOT', 6),
-                            _buildEvaluasiRow('ANTICIPATION & SPATIAL AWARENESS', 'BOXPLOT', 3),
-                            _buildEvaluasiRow('AGILITY', 'RADAR', 8),
-                            _buildEvaluasiRow('MOBILITY', 'RADAR', 9),
-                            _buildEvaluasiRow('OPEN/REACTIVE AGILITY', 'RADAR', 2),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
-        ),
-      ),
-    );
-  }
+        ), // <-- HAPUS `const SizedBox(height: 16),` yang ada di sini
+
+        // ==================== GRAFIK BOXPLOT ====================
+        SliverToBoxAdapter( // <-- TAMBAH INI
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF334155)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(width: 4, height: 16, color: const Color(0xFF38BDF8)),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'DISTRIBUSI MOTORIK TIM VS INDIVIDU (BOXPLOT)',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Color(0xFF38BDF8)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 250,
+                    child: MetaBoxplotChart(
+                      boxData: widget.activeMurid.boxData,
+                      teamAverages: widget.teamBoxAverages,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ), // <-- TAMBAH INI
+
+        // ==================== GRAFIK RADAR ====================
+        SliverToBoxAdapter( // <-- TAMBAH INI
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF334155)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(width: 4, height: 16, color: const Color(0xFF22C55E)),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'PROFIL BIOMOTORIK METRIKS RADAR (10 DIMENSI)',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Color(0xFF22C55E)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 320,
+                    child: MetaRadarChart(
+                      dataIndividu: widget.activeMurid.radarData,
+                      rataRataTim: widget.teamRadarAverages,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ), // <-- TAMBAH INI
+
+        // ==================== TABEL MATRIKS ANALISIS GERAK ====================
+        SliverToBoxAdapter( // <-- TAMBAH INI
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF334155)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(width: 4, height: 16, color: const Color(0xFF10B981)),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'MATRIKS ANALISIS GERAK & REKOMENDASI TAKTIS',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF10B981)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: 1050,
+                      child: Table(
+                        border: TableBorder.all(color: const Color(0xFF334155), width: 1),
+                        columnWidths: const {
+                          0: FlexColumnWidth(1.8),
+                          1: FlexColumnWidth(2.3),
+                          2: FlexColumnWidth(2.5),
+                          3: FlexColumnWidth(2.3),
+                          4: FlexColumnWidth(2.3),
+                          5: FlexColumnWidth(3.4)
+                        },
+                        children: [
+                          TableRow(
+                            decoration: const BoxDecoration(color: Color(0xFF0F172A)),
+                            children: [
+                              _buildHeaderCell('KOMPONEN'),
+                              _buildHeaderCell('POLA BOXPLOT'),
+                              _buildHeaderCell('ARTI POLA'),
+                              _buildHeaderCell('KELEBIHAN'),
+                              _buildHeaderCell('KEKURANGAN'),
+                              _buildHeaderCell('REKOMENDASI')
+                            ],
+                          ),
+                          _buildEvaluasiRow('STRENGTH', 'BOXPLOT', 0),
+                          _buildEvaluasiRow('ENDURANCE', 'BOXPLOT', 1),
+                          _buildEvaluasiRow('SPEED', 'BOXPLOT', 2),
+                          _buildEvaluasiRow('COORDINATION', 'BOXPLOT', 3),
+                          _buildEvaluasiRow('FLEXIBILITY', 'BOXPLOT', 4),
+                          _buildEvaluasiRow('BALANCE', 'BOXPLOT', 5),
+                          _buildEvaluasiRow('REACTION TIME', 'BOXPLOT', 6),
+                          _buildEvaluasiRow('MUSCULAR ENDURANCE', 'BOXPLOT', 1),
+                          _buildEvaluasiRow('POWER', 'BOXPLOT', 0),
+                          _buildEvaluasiRow('CORE STABILITY', 'BOXPLOT', 0),
+                          _buildEvaluasiRow('DYNAMIC FLEXIBILITY', 'BOXPLOT', 4),
+                          _buildEvaluasiRow('SPEED ENDURANCE', 'BOXPLOT', 2),
+                          _buildEvaluasiRow('REACTIVE SPEED / QUICKNESS', 'BOXPLOT', 6),
+                          _buildEvaluasiRow('ANTICIPATION & SPATIAL AWARENESS', 'BOXPLOT', 3),
+                          _buildEvaluasiRow('AGILITY', 'RADAR', 8),
+                          _buildEvaluasiRow('MOBILITY', 'RADAR', 9),
+                          _buildEvaluasiRow('OPEN/REACTIVE AGILITY', 'RADAR', 2),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ), // <-- TAMBAH INI
+      ],
+    ),
+  );
+}
 
   Widget _buildHeaderCell(String text) {
     return Padding(
