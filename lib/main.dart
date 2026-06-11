@@ -24,18 +24,21 @@ import 'dart:io';
 final ScreenshotController widgetScreenshotController = ScreenshotController();
 
 class WidgetScreenshotHelper {
+  // Bikin ukuran gede biar base bitmap-nya tajem
+  static const widgetSize = Size(1200, 600); // 2:1 ratio, aman buat widget 4x2
+
   static Widget buildFullHomescreenWidget({
     required Murid activeMurid,
     required List<double> teamBoxAverages,
     required List<double> teamRadarAverages,
   }) {
     return Container(
-      width: 390,
-      height: 750,
-      padding: const EdgeInsets.all(8),
+      width: widgetSize.width,
+      height: widgetSize.height,
+      padding: const EdgeInsets.all(24), // padding dibesarin juga
       decoration: BoxDecoration(
         color: const Color(0xFF0F172A),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(32), // radius dibesarin
       ),
       child: Column(
         children: [
@@ -43,13 +46,13 @@ class WidgetScreenshotHelper {
             '${activeMurid.id} - ${activeMurid.nama}',
             style: const TextStyle(
               color: Color(0xFF38BDF8),
-              fontSize: 12,
+              fontSize: 36, // font dibesarin 3x lipat
               fontWeight: FontWeight.w900,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 18),
           Expanded(
             flex: 2,
             child: MetaBoxplotChart(
@@ -57,7 +60,7 @@ class WidgetScreenshotHelper {
               teamAverages: teamBoxAverages,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 18),
           Expanded(
             flex: 3,
             child: MetaRadarChart(
@@ -79,10 +82,15 @@ class WidgetService {
     required List<double> teamRadarAverages,
   }) async {
     try {
-      // Langsung capture pake helper, nggak perlu bikin Container lagi
+      // 1. Pake MediaQuery dari context biar DPR bener
+      final mq = MediaQuery.of(context);
+      
       final imageBytes = await widgetScreenshotController.captureFromWidget(
         MediaQuery(
-          data: const MediaQueryData(),
+          data: mq.copyWith(
+            // Paksa text scale 1.0 biar konsisten
+            textScaleFactor: 1.0,
+          ),
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: WidgetScreenshotHelper.buildFullHomescreenWidget(
@@ -92,13 +100,17 @@ class WidgetService {
             ),
           ),
         ),
-        pixelRatio: 3.0,
-        delay: const Duration(milliseconds: 100),
+        // 2. KUNCI: targetSize = ukuran output PNG
+        targetSize: WidgetScreenshotHelper.widgetSize,
+        pixelRatio: 3.0, // 1200 * 3 = 3600px. Tajem parah
+        delay: const Duration(milliseconds: 500), // chart butuh waktu render
       );
 
       final dir = await getApplicationSupportDirectory();
       final file = File('${dir.path}/dashboard_widget.png');
       await file.writeAsBytes(imageBytes);
+
+      debugPrint("📐 Ukuran PNG: ${imageBytes.lengthInBytes / 1024} KB");
 
       await HomeWidget.saveWidgetData<String>('img_path', file.path);
       await HomeWidget.saveWidgetData<String>('nama_atlet', activeMurid.nama);
