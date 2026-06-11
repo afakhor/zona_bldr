@@ -944,7 +944,7 @@ class _DashboardAtletPageState extends State<DashboardAtletPage> {
   @override
 Widget build(BuildContext context) {
   final topPadding = MediaQuery.of(context).padding.top;
-  const headerHeight = 131.0; // Tinggi AppBar + Card Profil. Sesuaikan kalau perlu
+  const headerHeight = 135.0; // Tinggi AppBar + Card Profil. Sesuaikan kalau perlu
 
   return Scaffold(
     // 1. Wajib biar body nembus ke atas layar
